@@ -30,3 +30,7 @@ The code is implemented in Python and supports GPU acceleration through PyTorch 
 ## License
 
 Please refer to the `LICENSE` file for the license information.
+
+## Reference
+
+Liu S, Chen X, Liu S. Tensorized Quantum Genetic Algorithm With Selective Evolution Strategy for Thin‐Film Optical Inverse Problems[J]. Laser & Photonics Reviews, 2026, 20(11): e01880.  [DOI](https://doi.org/10.1002/lpor.202501880)
