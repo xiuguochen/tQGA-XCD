@@ -29,7 +29,7 @@ The code is implemented in Python and supports GPU acceleration through PyTorch 
 
 ## Usage
 
-All script files whose names begin with `main` are directly executable, and the algorithm configurations in these scripts are consistent with those used in the paper. Simply run a script to generate the corresponding result data, which will be saved in the appropriate subfolder under the `data` directory.
+All scripts whose filenames begin with `main` serve as the main entry points for generating the experimental results. The algorithm configurations in these scripts are consistent with those described in the paper. Run the corresponding script directly to generate the result data, which will be saved in the appropriate subfolder under the `data` directory.
 
 - `main_DoubleTrape_QGANM_Seed.py`: Solves the double-layer trapezoidal structure using tQGA with a fixed random seed.
 - `main_DoubleTrape_CMAES_Seed.py`: Solves the double-layer trapezoidal structure using CMA-ES with a fixed random seed.
