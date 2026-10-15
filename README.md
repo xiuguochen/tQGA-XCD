@@ -27,6 +27,15 @@ pip install -r requirements.txt
 
 The code is implemented in Python and supports GPU acceleration through PyTorch when a compatible CUDA environment is available.
 
+## Usage
+
+All script files whose names begin with `main` are directly executable, and the algorithm configurations in these scripts are consistent with those used in the paper. Simply run a script to generate the corresponding result data, which will be saved in the appropriate subfolder under the `data` directory.
+
+- `main_DoubleTrape_QGANM_Seed.py`: Solves the double-layer trapezoidal structure using tQGA with a fixed random seed.
+- `main_DoubleTrape_CMAES_Seed.py`: Solves the double-layer trapezoidal structure using CMA-ES with a fixed random seed.
+- `main_DoubleTrape_DE_Seed.py`: Solves the double-layer trapezoidal structure using DE with a fixed random seed.
+- `main_DoubleTrape_QGANM_RankAbla.py`: Performs an ablation study by replacing random subset sampling in the selective evolution mechanism with deterministic subset sampling based on objective-function ranking.
+
 ## License
 
 Please refer to the `LICENSE` file for the license information.
