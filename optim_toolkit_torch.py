@@ -215,3 +215,51 @@ class SelectionQA(QuantumGeneticAlgorithm):
             return self.best_chrom, self.best_fitness
 
 
+class RankSelectionQA(SelectionQA):
+    """SelectionQA with deterministic fitness-rank subsets (minimization).
+
+    The constructor, evolve() return value, and quantum update are inherited.
+    N = round(pop_size * selection_rate), as in SelectionQA.
+    For zero-based rank r, use N consecutive ranks starting at
+    max(0, r - N + 1). The subset includes the current individual;
+    at the top boundary it is shifted to ranks 0..N-1.
+    Ties are resolved by the original population index (stable sorting).
+
+    N == pop_size preserves SelectionQA's historical-global-best branch.
+    Only subset selection is deterministic. Initialization, observation,
+    exceptional rotation signs, and mutation retain their original behavior.
+    """
+
+    def __init__(self, *args, selection_rate=0.6, **kwargs):
+        super().__init__(*args, selection_rate=selection_rate, **kwargs)
+        if not 1 <= self.tourn_size <= self.total_pop_size:
+            raise ValueError(
+                'round(pop_size * selection_rate) must be between 1 and pop_size; '
+                f'got {self.tourn_size} for pop_size={self.total_pop_size}.'
+            )
+
+    def selection(self, chrom, fitness):
+        if self.tourn_size == self.total_pop_size:
+            # evolve() records the historical best before calling selection().
+            return self.best_chrom, self.best_fitness
+
+        if chrom.shape[0] != self.total_pop_size:
+            raise ValueError('chrom must have pop_size rows.')
+        if fitness.ndim not in (1, 2) or (
+            fitness.ndim == 2 and fitness.shape[1] != 1
+        ) or fitness.numel() != self.total_pop_size:
+            raise ValueError('fitness must have shape (pop_size,) or (pop_size, 1).')
+
+        values = fitness.reshape(-1)
+        # Equal objective values retain population-index order.
+        order = torch.argsort(values, stable=True)
+        ranks = torch.empty_like(order)
+        ranks[order] = torch.arange(self.total_pop_size, device=order.device)
+        start_ranks = (ranks - self.tourn_size + 1).clamp(min=0)
+
+        # Each window is sorted; its first member is its best. No need to
+        # materialize all pop_size * tourn_size candidate indices.
+        selected_indices = order[start_ranks]
+        return chrom[selected_indices], fitness[selected_indices]
+
+
